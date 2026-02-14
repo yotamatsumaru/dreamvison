@@ -20,7 +20,7 @@ async function loadSuccessInfo() {
     try {
         // Get session status
         const response = await axios.get(`/api/stripe/checkout/${sessionId}`);
-        const { status, customerEmail, purchase } = response.data;
+        const { status, customerEmail, purchase, event } = response.data;
         
         if (status === 'paid' && purchase) {
             // Success!
@@ -31,6 +31,24 @@ async function loadSuccessInfo() {
                         <h2 class="text-3xl font-bold text-white mb-2">購入完了！</h2>
                         <p class="text-gray-300">チケットの購入が完了しました</p>
                     </div>
+                    
+                    ${event ? `
+                        <div class="bg-purple-900 bg-opacity-30 border border-purple-700 rounded-lg p-6 mb-6">
+                            <h3 class="text-xl font-bold text-white mb-3">
+                                <i class="fas fa-calendar-check text-purple-400 mr-2"></i>
+                                ${event.title}
+                            </h3>
+                            <p class="text-gray-300 mb-4">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                このイベントの視聴が可能になりました
+                            </p>
+                            <a href="/watch/${event.slug}?token=${purchase.access_token}" 
+                               class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 px-8 rounded-lg transition shadow-lg">
+                                <i class="fas fa-play-circle mr-2"></i>
+                                今すぐ視聴する
+                            </a>
+                        </div>
+                    ` : ''}
                     
                     <div class="bg-black bg-opacity-40 rounded-lg p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">購入情報</h3>
@@ -81,11 +99,11 @@ async function loadSuccessInfo() {
                             <i class="fas fa-list mr-2"></i>
                             イベント一覧
                         </a>
-                        ${purchase.event_id ? `
-                            <a href="/watch/${purchase.event_id}?token=${purchase.access_token}" 
+                        ${event ? `
+                            <a href="/events/${event.slug}" 
                                class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition">
-                                <i class="fas fa-play mr-2"></i>
-                                視聴ページへ
+                                <i class="fas fa-info-circle mr-2"></i>
+                                イベント詳細
                             </a>
                         ` : ''}
                     </div>

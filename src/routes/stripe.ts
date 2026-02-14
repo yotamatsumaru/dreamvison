@@ -156,10 +156,23 @@ stripe.get('/checkout/:sessionId', async (c) => {
     const db = new Database(c.env.DB);
     const purchase = await db.getPurchaseByCheckoutSession(sessionId);
 
+    let eventInfo = null;
+    if (purchase) {
+      const event = await db.getEventById(purchase.event_id);
+      if (event) {
+        eventInfo = {
+          id: event.id,
+          slug: event.slug,
+          title: event.title,
+        };
+      }
+    }
+
     return c.json({
       status: session.payment_status,
       customerEmail: session.customer_details?.email,
       purchase: purchase,
+      event: eventInfo,
     });
   } catch (error: any) {
     console.error('Session retrieval error:', error);
