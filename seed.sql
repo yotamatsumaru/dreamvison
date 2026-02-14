@@ -1,7 +1,9 @@
 -- Insert sample artists
 INSERT OR IGNORE INTO artists (id, name, slug, description, image_url) VALUES 
   (1, 'Sample Artist', 'sample-artist', 'サンプルアーティストの説明文です。', 'https://via.placeholder.com/400x400'),
-  (2, 'Test Band', 'test-band', 'テストバンドのプロフィールです。', 'https://via.placeholder.com/400x400');
+  (2, 'Test Band', 'test-band', 'テストバンドのプロフィールです。', 'https://via.placeholder.com/400x400'),
+  (3, 'REIRIE', 'reirie', 'REIRIEのアーティストページ', 'https://via.placeholder.com/400x400'),
+  (4, 'みことね', 'mikotone', 'みことねのアーティストページ', 'https://via.placeholder.com/400x400');
 
 -- Insert sample events
 INSERT OR IGNORE INTO events (id, artist_id, title, slug, description, thumbnail_url, event_type, stream_url, status, start_time) VALUES 
