@@ -9,7 +9,30 @@ const watch = new Hono<{ Bindings: Bindings }>();
 // Verify access token and get viewing permission
 watch.post('/verify', async (c) => {
   try {
-    const { token } = await c.req.json();
+    const { token, eventSlug, preview } = await c.req.json();
+    
+    // Preview mode (development only - bypass authentication)
+    if (preview === true && eventSlug) {
+      const db = new Database(c.env.DB);
+      const event = await db.getEventBySlug(eventSlug);
+      
+      if (!event) {
+        return c.json({ error: 'Event not found' }, 404);
+      }
+
+      return c.json({
+        valid: true,
+        preview: true,
+        event: {
+          id: event.id,
+          title: event.title,
+          slug: event.slug,
+          description: event.description,
+          eventType: event.event_type,
+          status: event.status,
+        },
+      });
+    }
     
     if (!token) {
       return c.json({ error: 'Token required' }, 400);
@@ -67,13 +90,33 @@ watch.post('/verify', async (c) => {
 // Get signed streaming URL
 watch.post('/stream-url', async (c) => {
   try {
-    const { token, eventId } = await c.req.json();
+    const { token, eventId, eventSlug, preview } = await c.req.json();
+    
+    const db = new Database(c.env.DB);
+    
+    // Preview mode (development only)
+    if (preview === true && eventSlug) {
+      const event = await db.getEventBySlug(eventSlug);
+      if (!event) {
+        return c.json({ error: 'Event not found' }, 404);
+      }
+
+      const streamUrl = event.event_type === 'archive' ? event.archive_url : event.stream_url;
+      if (!streamUrl) {
+        return c.json({ error: 'Stream URL not available' }, 404);
+      }
+
+      return c.json({
+        streamUrl: streamUrl,
+        expiresIn: 0,
+        useSigned: false,
+        preview: true,
+      });
+    }
     
     if (!token || !eventId) {
       return c.json({ error: 'Token and eventId required' }, 400);
     }
-
-    const db = new Database(c.env.DB);
     
     // Verify access token
     const purchase = await db.getPurchaseByAccessToken(token);

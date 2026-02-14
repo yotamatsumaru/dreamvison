@@ -6,41 +6,42 @@ let videoElement = null;
 async function initializePlayer() {
     const container = document.getElementById('watch-container');
     
-    // Check if access token is provided
-    if (!accessToken) {
-        container.innerHTML = `
-            <div class="max-w-4xl mx-auto px-4 py-12">
-                <div class="bg-red-900 bg-opacity-20 border border-red-800 rounded-xl p-8 text-center">
-                    <i class="fas fa-lock text-red-500 text-4xl mb-4"></i>
-                    <h2 class="text-2xl font-bold text-white mb-2">アクセストークンが必要です</h2>
-                    <p class="text-gray-300 mb-4">この配信を視聴するには、チケットを購入してください。</p>
-                    <a href="/events" class="inline-block bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition">
-                        <i class="fas fa-ticket-alt mr-2"></i>
-                        チケットを購入する
-                    </a>
-                </div>
-            </div>
-        `;
-        return;
+    // Check if preview mode or access token
+    const urlParams = new URLSearchParams(window.location.search);
+    const isPreview = urlParams.get('preview') === 'true' || !accessToken;
+    
+    // Preview mode: show warning banner
+    if (isPreview) {
+        console.log('Preview mode enabled - bypassing authentication');
     }
     
     try {
-        // Verify access token
-        const verifyResponse = await axios.post('/api/watch/verify', {
+        // Verify access token or get preview access
+        const verifyPayload = isPreview ? {
+            preview: true,
+            eventSlug: eventSlug
+        } : {
             token: accessToken
-        });
+        };
+        
+        const verifyResponse = await axios.post('/api/watch/verify', verifyPayload);
         
         if (!verifyResponse.data.valid) {
             throw new Error('Invalid token');
         }
         
-        const { event } = verifyResponse.data;
+        const { event, preview } = verifyResponse.data;
         
         // Get stream URL
-        const streamResponse = await axios.post('/api/watch/stream-url', {
+        const streamPayload = preview ? {
+            preview: true,
+            eventSlug: eventSlug
+        } : {
             token: accessToken,
             eventId: event.id
-        });
+        };
+        
+        const streamResponse = await axios.post('/api/watch/stream-url', streamPayload);
         
         const { streamUrl, useSigned } = streamResponse.data;
         
@@ -50,6 +51,16 @@ async function initializePlayer() {
         
         // Create video player with native HTML5 video tag
         container.innerHTML = `
+            ${preview ? `
+                <div class="bg-yellow-900 bg-opacity-30 border-b border-yellow-700 p-4">
+                    <div class="max-w-7xl mx-auto flex items-center justify-center space-x-3">
+                        <i class="fas fa-exclamation-triangle text-yellow-400 text-xl"></i>
+                        <span class="text-yellow-300 font-semibold">
+                            プレビューモード（開発用）- チケット購入なしで視聴しています
+                        </span>
+                    </div>
+                </div>
+            ` : ''}
             <div class="relative bg-black">
                 <div class="max-w-7xl mx-auto">
                     <video 

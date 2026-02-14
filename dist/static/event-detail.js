@@ -81,6 +81,25 @@ async function loadEventDetail() {
                             チケット選択
                         </h2>
                         
+                        <div class="bg-blue-900 bg-opacity-20 border border-blue-700 rounded-lg p-4 mb-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-white font-bold mb-1">
+                                        <i class="fas fa-eye text-blue-400 mr-2"></i>
+                                        開発用プレビュー
+                                    </h3>
+                                    <p class="text-gray-300 text-sm">
+                                        チケット購入なしで動画プレイヤーをテストできます
+                                    </p>
+                                </div>
+                                <a href="/watch/${event.slug}?preview=true" 
+                                   class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition whitespace-nowrap">
+                                    <i class="fas fa-play mr-2"></i>
+                                    プレビュー
+                                </a>
+                            </div>
+                        </div>
+                        
                         ${event.tickets && event.tickets.length > 0 ? `
                             <div class="grid md:grid-cols-2 gap-4">
                                 ${event.tickets.filter(t => t.is_active).map(ticket => {
