@@ -26,11 +26,16 @@ async function initializePlayer() {
         
         const verifyResponse = await axios.post('/api/watch/verify', verifyPayload);
         
+        console.log('Verify response:', verifyResponse.data);
+        
         if (!verifyResponse.data.valid) {
             throw new Error('Invalid token');
         }
         
         const { event, preview } = verifyResponse.data;
+        
+        console.log('Event data:', event);
+        console.log('Preview mode:', preview);
         
         // Get stream URL
         const streamPayload = preview ? {
@@ -41,9 +46,16 @@ async function initializePlayer() {
             eventId: event.id
         };
         
+        console.log('Stream payload:', streamPayload);
+        
         const streamResponse = await axios.post('/api/watch/stream-url', streamPayload);
         
+        console.log('Stream response:', streamResponse.data);
+        
         const { streamUrl, useSigned } = streamResponse.data;
+        
+        console.log('Stream URL:', streamUrl);
+        console.log('Is signed:', useSigned);
         
         // Determine if it's HLS or MP4
         const isHLS = streamUrl.includes('.m3u8');
