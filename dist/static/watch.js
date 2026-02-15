@@ -64,12 +64,21 @@ async function initializePlayer() {
         // Create video player with native HTML5 video tag
         container.innerHTML = `
             ${preview ? `
-                <div class="bg-yellow-900 bg-opacity-30 border-b border-yellow-700 p-4">
-                    <div class="max-w-7xl mx-auto flex items-center justify-center space-x-3">
-                        <i class="fas fa-exclamation-triangle text-yellow-400 text-xl"></i>
-                        <span class="text-yellow-300 font-semibold">
-                            プレビューモード（開発用）- チケット購入なしで視聴しています
-                        </span>
+                <div class="bg-gradient-to-r from-yellow-900/40 via-orange-900/40 to-yellow-900/40 border-b-2 border-yellow-500/50 backdrop-blur-md">
+                    <div class="max-w-7xl mx-auto px-4 py-4">
+                        <div class="flex items-center justify-center space-x-3 flex-wrap gap-2">
+                            <div class="bg-yellow-500/20 rounded-full p-2">
+                                <i class="fas fa-exclamation-triangle text-yellow-400 text-lg md:text-xl"></i>
+                            </div>
+                            <div class="text-center md:text-left">
+                                <span class="text-yellow-300 font-bold text-sm md:text-base block md:inline">
+                                    プレビューモード（開発用）
+                                </span>
+                                <span class="text-yellow-200/80 text-xs md:text-sm block md:inline md:ml-2">
+                                    チケット購入なしで視聴しています
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             ` : ''}
@@ -89,19 +98,21 @@ async function initializePlayer() {
                     </video>
                 </div>
                 
-                <div class="max-w-7xl mx-auto px-4 py-6">
-                    <h1 class="text-3xl font-bold text-white mb-2">${event.title}</h1>
-                    <div class="flex items-center space-x-4 text-gray-400">
+                <div class="max-w-7xl mx-auto px-4 py-4 md:py-6">
+                    <h1 class="text-xl md:text-3xl font-bold text-white mb-2">${event.title}</h1>
+                    <div class="flex items-center flex-wrap gap-3 md:gap-4 text-gray-400 text-sm md:text-base">
                         <span>
                             <i class="fas fa-${event.eventType === 'live' ? 'broadcast-tower' : 'archive'} mr-2"></i>
                             ${event.eventType === 'live' ? 'ライブ配信' : 'アーカイブ配信'}
                         </span>
-                        ${event.status === 'live' ? '<span class="text-red-500"><i class="fas fa-circle animate-pulse mr-1"></i>配信中</span>' : ''}
+                        ${event.status === 'live' ? '<span class="text-red-500 text-sm md:text-base"><i class="fas fa-circle animate-pulse mr-1"></i>配信中</span>' : ''}
                     </div>
                     
-                    <div class="mt-4 text-gray-400 text-sm">
-                        <p class="whitespace-pre-line">${event.description || ''}</p>
-                    </div>
+                    ${event.description ? `
+                        <div class="mt-3 md:mt-4 text-gray-400 text-xs md:text-sm">
+                            <p class="whitespace-pre-line leading-relaxed">${event.description || ''}</p>
+                        </div>
+                    ` : ''}
                 </div>
             </div>
         `;

@@ -41,8 +41,8 @@ async function loadEventDetail() {
                     </div>
                 </div>
                 
-                <div class="p-8">
-                    <h1 class="text-4xl font-bold text-white mb-4">${event.title}</h1>
+                <div class="p-6 md:p-8">
+                    <h1 class="text-2xl md:text-4xl font-bold text-white mb-4">${event.title}</h1>
                     
                     <div class="flex items-center space-x-6 text-gray-300 mb-6">
                         ${event.start_time ? `
@@ -70,30 +70,34 @@ async function loadEventDetail() {
                     
                     ${event.description ? `
                         <div class="mb-8">
-                            <h2 class="text-2xl font-bold text-white mb-3">イベント詳細</h2>
-                            <p class="text-gray-300 whitespace-pre-line">${event.description}</p>
+                            <h2 class="text-xl md:text-2xl font-bold text-white mb-3">イベント詳細</h2>
+                            <p class="text-gray-300 whitespace-pre-line text-sm md:text-base">${event.description}</p>
                         </div>
                     ` : ''}
                     
                     <div class="border-t border-gray-700 pt-8">
-                        <h2 class="text-2xl font-bold text-white mb-6">
+                        <h2 class="text-xl md:text-2xl font-bold text-white mb-6">
                             <i class="fas fa-ticket-alt text-purple-500 mr-2"></i>
                             チケット選択
                         </h2>
                         
-                        <div class="bg-blue-900 bg-opacity-20 border border-blue-700 rounded-lg p-4 mb-6">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <h3 class="text-white font-bold mb-1">
-                                        <i class="fas fa-eye text-blue-400 mr-2"></i>
-                                        開発用プレビュー
-                                    </h3>
-                                    <p class="text-gray-300 text-sm">
-                                        チケット購入なしで動画プレイヤーをテストできます
-                                    </p>
+                        <div class="bg-gradient-to-br from-blue-900/30 to-purple-900/30 border border-blue-500/50 rounded-xl p-4 md:p-6 mb-6 backdrop-blur-sm shadow-lg">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div class="flex items-start space-x-3">
+                                    <div class="bg-blue-500/20 rounded-full p-3 flex-shrink-0">
+                                        <i class="fas fa-eye text-blue-400 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-white font-bold mb-1 text-base md:text-lg">
+                                            開発用プレビュー
+                                        </h3>
+                                        <p class="text-gray-300 text-xs md:text-sm leading-relaxed">
+                                            チケット購入なしで動画プレイヤーをテストできます
+                                        </p>
+                                    </div>
                                 </div>
                                 <a href="/watch/${event.slug}?preview=true" 
-                                   class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition whitespace-nowrap">
+                                   class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-6 rounded-lg transition transform hover:scale-105 whitespace-nowrap text-center shadow-md">
                                     <i class="fas fa-play mr-2"></i>
                                     プレビュー
                                 </a>
@@ -109,26 +113,26 @@ async function loadEventDetail() {
                                         : '';
                                     
                                     return `
-                                        <div class="bg-gray-900 bg-opacity-50 rounded-lg p-6 border ${isSoldOut ? 'border-gray-700 opacity-60' : 'border-purple-800 hover:border-purple-500'} transition">
-                                            <div class="flex justify-between items-start mb-3">
+                                        <div class="bg-gray-900 bg-opacity-50 rounded-lg p-4 md:p-6 border ${isSoldOut ? 'border-gray-700 opacity-60' : 'border-purple-800 hover:border-purple-500'} transition">
+                                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 gap-2">
                                                 <div>
-                                                    <h3 class="text-xl font-bold text-white mb-1">${ticket.name}</h3>
-                                                    ${ticket.description ? `<p class="text-gray-400 text-sm">${ticket.description}</p>` : ''}
+                                                    <h3 class="text-lg md:text-xl font-bold text-white mb-1">${ticket.name}</h3>
+                                                    ${ticket.description ? `<p class="text-gray-400 text-xs md:text-sm">${ticket.description}</p>` : ''}
                                                 </div>
-                                                ${isSoldOut ? '<span class="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold">完売</span>' : ''}
+                                                ${isSoldOut ? '<span class="bg-red-600 text-white px-3 py-1 rounded-full text-xs md:text-sm font-bold self-start">完売</span>' : ''}
                                             </div>
                                             
-                                            <div class="flex justify-between items-center">
+                                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                                                 <div>
-                                                    <div class="text-3xl font-bold text-purple-400">
+                                                    <div class="text-2xl md:text-3xl font-bold text-purple-400">
                                                         ¥${ticket.price.toLocaleString()}
                                                     </div>
-                                                    ${stockText ? `<div class="text-sm text-gray-500 mt-1">${stockText}</div>` : ''}
+                                                    ${stockText ? `<div class="text-xs md:text-sm text-gray-500 mt-1">${stockText}</div>` : ''}
                                                 </div>
                                                 
                                                 ${!isSoldOut ? `
                                                     <button onclick="purchaseTicket(${event.id}, ${ticket.id})" 
-                                                            class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition">
+                                                            class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 md:py-3 px-4 md:px-6 rounded-lg transition w-full sm:w-auto">
                                                         <i class="fas fa-shopping-cart mr-2"></i>
                                                         購入する
                                                     </button>

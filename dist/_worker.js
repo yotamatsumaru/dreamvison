@@ -107,10 +107,10 @@ Signature verification is impossible without access to the original signed mater
 
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="text-center mb-16">
-                <h1 class="text-5xl font-bold text-white mb-4">
+                <h1 class="text-3xl md:text-5xl font-bold text-white mb-4">
                     ライブ配信・ストリーミング<br>プラットフォーム
                 </h1>
-                <p class="text-xl text-gray-300 mb-8">
+                <p class="text-base md:text-xl text-gray-300 mb-8">
                     お気に入りのアーティストのライブをどこでも視聴
                 </p>
                 <div class="flex justify-center space-x-4">
@@ -126,7 +126,7 @@ Signature verification is impossible without access to the original signed mater
             </div>
 
             <div id="upcoming-events" class="mb-12">
-                <h2 class="text-3xl font-bold text-white mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">
                     <i class="fas fa-fire text-orange-500 mr-2"></i>
                     今後のライブ
                 </h2>
@@ -138,26 +138,26 @@ Signature verification is impossible without access to the original signed mater
                 </div>
             </div>
 
-            <div class="bg-black bg-opacity-40 backdrop-blur-md rounded-xl p-8 border border-gray-800">
-                <h2 class="text-2xl font-bold text-white mb-4">
+            <div class="bg-black bg-opacity-40 backdrop-blur-md rounded-xl p-6 md:p-8 border border-gray-800">
+                <h2 class="text-xl md:text-2xl font-bold text-white mb-4">
                     <i class="fas fa-info-circle text-blue-500 mr-2"></i>
                     プラットフォームについて
                 </h2>
                 <div class="grid md:grid-cols-3 gap-6 text-gray-300">
                     <div>
-                        <i class="fas fa-video text-purple-500 text-3xl mb-2"></i>
-                        <h3 class="font-bold text-white mb-2">高品質配信</h3>
-                        <p>AWS + CloudFrontによる安定した配信</p>
+                        <i class="fas fa-video text-purple-500 text-2xl md:text-3xl mb-2"></i>
+                        <h3 class="font-bold text-white mb-2 text-base md:text-lg">高品質配信</h3>
+                        <p class="text-sm md:text-base">AWS + CloudFrontによる安定した配信</p>
                     </div>
                     <div>
-                        <i class="fas fa-lock text-purple-500 text-3xl mb-2"></i>
-                        <h3 class="font-bold text-white mb-2">セキュア</h3>
-                        <p>DRM保護と署名付きURL</p>
+                        <i class="fas fa-lock text-purple-500 text-2xl md:text-3xl mb-2"></i>
+                        <h3 class="font-bold text-white mb-2 text-base md:text-lg">セキュア</h3>
+                        <p class="text-sm md:text-base">DRM保護と署名付きURL</p>
                     </div>
                     <div>
-                        <i class="fas fa-credit-card text-purple-500 text-3xl mb-2"></i>
-                        <h3 class="font-bold text-white mb-2">簡単決済</h3>
-                        <p>Stripeによる安全な決済</p>
+                        <i class="fas fa-credit-card text-purple-500 text-2xl md:text-3xl mb-2"></i>
+                        <h3 class="font-bold text-white mb-2 text-base md:text-lg">簡単決済</h3>
+                        <p class="text-sm md:text-base">Stripeによる安全な決済</p>
                     </div>
                 </div>
             </div>
@@ -260,7 +260,7 @@ Signature verification is impossible without access to the original signed mater
 
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="mb-8">
-                <h1 class="text-4xl font-bold text-white mb-4">
+                <h1 class="text-2xl md:text-4xl font-bold text-white mb-4">
                     <i class="fas fa-calendar-alt text-purple-500 mr-2"></i>
                     イベント一覧
                 </h1>
@@ -355,7 +355,7 @@ Signature verification is impossible without access to the original signed mater
         </nav>
 
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <h1 class="text-4xl font-bold text-white mb-8">
+            <h1 class="text-2xl md:text-4xl font-bold text-white mb-8">
                 <i class="fas fa-users text-purple-500 mr-2"></i>
                 アーティスト一覧
             </h1>
