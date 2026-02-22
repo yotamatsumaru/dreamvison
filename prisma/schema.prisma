@@ -1,0 +1,189 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// アーティスト
+model Artist {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  bio         String?   @db.Text
+  imageUrl    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  events      Event[]
+
+  @@index([slug])
+}
+
+// イベント（ライブ配信・アーカイブ）
+model Event {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  description     String?   @db.Text
+  imageUrl        String?
+  status          EventStatus @default(UPCOMING)
+  eventType       EventType
+  startDate       DateTime
+  endDate         DateTime?
+  streamUrl       String?
+  hlsUrl          String?
+  mediaLiveId     String?   // AWS MediaLive Channel ID
+  mediaPackageId  String?   // AWS MediaPackage Channel ID
+  cloudfrontUrl   String?
+  artistId        String
+  artist          Artist    @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  tickets         Ticket[]
+  purchases       Purchase[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([slug])
+  @@index([artistId])
+  @@index([status])
+}
+
+enum EventStatus {
+  UPCOMING
+  LIVE
+  ENDED
+  ARCHIVED
+}
+
+enum EventType {
+  LIVE
+  ARCHIVE
+}
+
+// チケット種別
+model Ticket {
+  id              String    @id @default(cuid())
+  name            String
+  description     String?
+  price           Int       // 価格（円）
+  stripePriceId   String?   // Stripe Price ID
+  stock           Int       @default(0)
+  soldCount       Int       @default(0)
+  eventId         String
+  event           Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  purchases       Purchase[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([eventId])
+}
+
+// 購入履歴
+model Purchase {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventId           String
+  event             Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  ticketId          String
+  ticket            Ticket    @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  stripeSessionId   String    @unique
+  stripePaymentId   String?
+  amount            Int
+  status            PurchaseStatus @default(PENDING)
+  accessToken       String?   @unique
+  accessTokenExpiry DateTime?
+  purchasedAt       DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([eventId])
+  @@index([status])
+  @@index([accessToken])
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  REFUNDED
+  CANCELLED
+}
+
+// ユーザー（NextAuth.js用）
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole  @default(USER)
+  accounts      Account[]
+  sessions      Session[]
+  purchases     Purchase[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([email])
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+// NextAuth.js Account
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+// NextAuth.js Session
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// NextAuth.js VerificationToken
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// 管理者
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // bcrypt hashed
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}
